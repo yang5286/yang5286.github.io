@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全部歌曲</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f8faff;
+            color: #0a1e32;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 48px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #0b1e33;
+        }
+
+        .page-header .sub {
+            color: #5e6f8d;
+            font-size: 1rem;
+            margin-top: 6px;
+            border-left: 3px solid #b3c9e0;
+            padding-left: 16px;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            max-width: 720px;
+            margin: 20px 0 40px 0;
+        }
+
+        .quick-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 20px 28px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+            border: 1px solid #eef2f6;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #0a1e32;
+            text-align: center;
+            min-height: 160px;
+            font-family: inherit;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 32px rgba(0, 20, 40, 0.08);
+            border-color: #c9d9ec;
+            background: #ffffff;
+        }
+
+        .quick-btn:active {
+            transform: translateY(0px);
+            box-shadow: 0 4px 12px rgba(0, 20, 40, 0.04);
+        }
+
+        .quick-btn .icon {
+            font-size: 3.2rem;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .quick-btn .label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .quick-btn .desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            max-width: 160px;
+        }
+
+        .info-box {
+            background: #f1f6fd;
+            border-radius: 16px;
+            padding: 20px 28px;
+            max-width: 720px;
+            border-left: 4px solid #8aafd0;
+            color: #1f3a57;
+            margin-top: 8px;
+        }
+
+        .info-box strong {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .info-box code {
+            background: #e2ebf5;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #0b2b4a;
+        }
+
+        .quick-btn.clicked {
+            transform: scale(0.97);
+            background: #f0f6ff;
+            border-color: #7fa3cc;
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 20px 16px;
+            }
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            .quick-btn {
+                min-height: 120px;
+                padding: 24px 16px;
+            }
+            .quick-btn .icon {
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <h1>试听歌曲</h1>
+    </header>
+
+    <div class="quick-grid">
+        <button class="quick-btn primary" data-target="project" id="btnProject">
+            <span class="icon"></span>
+            <span class="label">华语歌曲</span>
+            <span class="desc"></span>
+        </button>
+
+        <button class="quick-btn secondary" data-target="team" id="btnTeam">
+            <span class="icon"></span>
+            <span class="label">福建歌</span>
+            <span class="desc"></span>
+        </button>
+    </div>
+
+
+    <script>
+        (function() {
+            const btnProject = document.getElementById('btnProject');
+            const btnTeam = document.getElementById('btnTeam');
+
+            function notifyParent(nodeId) {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'NAVIGATE_TO',
+                        nodeId: nodeId
+                    }, '*');
+                }
+
+                if (window.parent && typeof window.parent.navigateToNode === 'function') {
+                    try {
+                        window.parent.navigateToNode(nodeId);
+                    } catch (e) {}
+                }
+            }
+
+            function handleClick(e) {
+                const btn = e.currentTarget;
+                const targetId = btn.dataset.target;
+                if (!targetId) return;
+
+                btn.classList.add('clicked');
+                setTimeout(() => btn.classList.remove('clicked'), 180);
+
+                notifyParent(targetId);
+                console.log(`[home.html] 请求导航到: ${targetId}`);
+            }
+
+            btnProject.addEventListener('click', handleClick);
+            btnTeam.addEventListener('click', handleClick);
+
+            window.addEventListener('load', function() {
+                if (window.parent) {
+                    window.parent.postMessage({
+                        type: 'HOME_READY',
+                        from: 'home.html'
+                    }, '*');
+                }
+            });
+
+            window.navigateTo = function(nodeId) {
+                if (nodeId === 'project') {
+                    btnProject.click();
+                } else if (nodeId === 'team') {
+                    btnTeam.click();
+                }
+            };
+
+            console.log('[home.html] 已加载');
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华语歌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f8faff;
+            color: #0a1e32;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 48px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #0b1e33;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 6px;
+            border-left: 3px solid #b3c9e0;
+            padding-left: 16px;
+        }
+
+        .breadcrumb span {
+            background: #f1f5f9;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #1e3a5f;
+            margin: 16px 0 20px 0;
+            font-weight: 500;
+        }
+
+        /* ===== 三个大按钮 ===== */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            max-width: 780px;
+            margin: 8px 0 32px 0;
+        }
+
+        .big-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 24px 32px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+            border: 1px solid #eef2f6;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #0a1e32;
+            text-align: center;
+            min-height: 160px;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .big-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 32px rgba(0, 20, 40, 0.08);
+            border-color: #c9d9ec;
+            background: #ffffff;
+        }
+
+        .big-btn:active {
+            transform: translateY(0px);
+            box-shadow: 0 4px 12px rgba(0, 20, 40, 0.04);
+        }
+
+        .big-btn .icon {
+            font-size: 3rem;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .big-btn .label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .big-btn .desc {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        /* 不同按钮颜色点缀 */
+        .big-btn:nth-child(1) .icon {
+            filter: drop-shadow(0 2px 4px rgba(30, 80, 180, 0.10));
+        }
+        .big-btn:nth-child(2) .icon {
+            filter: drop-shadow(0 2px 4px rgba(0, 100, 80, 0.10));
+        }
+        .big-btn:nth-child(3) .icon {
+            filter: drop-shadow(0 2px 4px rgba(180, 80, 30, 0.10));
+        }
+
+        .big-btn.clicked {
+            transform: scale(0.97);
+            background: #f0f6ff;
+            border-color: #7fa3cc;
+        }
+
+        /* ===== 底部提示 ===== */
+        .info-box {
+            background: #f1f6fd;
+            border-radius: 16px;
+            padding: 16px 24px;
+            max-width: 780px;
+            border-left: 4px solid #8aafd0;
+            color: #1f3a57;
+            font-size: 0.95rem;
+        }
+
+        .info-box code {
+            background: #e2ebf5;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #0b2b4a;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 500px) {
+            body {
+                padding: 20px 16px;
+            }
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            .big-btn {
+                min-height: 120px;
+                padding: 24px 16px;
+            }
+            .big-btn .icon {
+                font-size: 2.4rem;
+            }
+            .button-grid {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 页面头部 ===== -->
+    <header class="page-header">
+        <h1 id="pageTitle">华语歌</h1>
+        <div class="breadcrumb">请选择歌手性别：<span id="pathDisplay"></span></div>
+    </header>
+
+    <!-- ===== 三个大按钮 ===== -->
+    <div class="section-title"></div>
+    <div class="button-grid" id="buttonGrid">
+        <!-- 按钮由 JavaScript 动态生成 -->
+    </div>
+
+
+    <script>
+        (function() {
+            // ========== 获取 URL 参数 ==========
+            const params = new URLSearchParams(window.location.search);
+            const nodeId = params.get('node') || 'root';
+
+            // ========== 节点名称映射 ==========
+            const nodeNames = {
+                'root': '全部歌曲',
+                'project': '华语歌',
+                'team': '福建歌',
+                'docs': '文档'
+            };
+
+            // ========== 子节点配置（包含图标和描述） ==========
+            const childrenConfig = {
+                'project': [
+                    { id: 'project-alpha', label: '男歌手', icon: '', desc: '' },
+                    { id: 'project-beta', label: '女歌手', icon: '', desc: '' },
+                    { id: 'project-gamma', label: '男女对唱', icon: '', desc: '' }
+                ],
+                'team': [
+                    { id: 'team-design', label: '男歌手', icon: '', desc: '' },
+                    { id: 'team-dev', label: '女歌手', icon: '', desc: '' },
+                    { id: 'team-ops', label: '男女对唱', icon: '', desc: '' }
+                ],
+                'docs': [
+                    { id: 'docs-guide', label: '使用指南', icon: '📖', desc: '平台使用指南' },
+                    { id: 'docs-api', label: 'API 参考', icon: '🔗', desc: 'RESTful API 文档' },
+                    { id: 'docs-faq', label: '常见问题', icon: '❓', desc: '问题汇总与解答' }
+                ],
+                'root': [
+                    { id: 'project', label: '项目', icon: '📁', desc: '查看所有项目' },
+                    { id: 'team', label: '团队', icon: '👥', desc: '团队与成员' },
+                    { id: 'docs', label: '文档', icon: '📄', desc: '文档中心' }
+                ]
+            };
+
+            // ========== 渲染按钮 ==========
+            const displayName = nodeNames[nodeId] || nodeId;
+            document.getElementById('pathDisplay').textContent = displayName;
+
+            // 更新页面标题
+            document.getElementById('pageTitle').textContent = `📂 ${displayName}`;
+
+            const children = childrenConfig[nodeId] || [];
+            const gridContainer = document.getElementById('buttonGrid');
+
+            if (children.length === 0) {
+                gridContainer.innerHTML = `<p style="color:#64748b;grid-column:1/-1;">此目录暂无子节点</p>`;
+            } else {
+                gridContainer.innerHTML = children.map(child => `
+                    <button class="big-btn" data-target="${child.id}">
+                        <span class="icon">${child.icon}</span>
+                        <span class="label">${child.label}</span>
+                        <span class="desc">${child.desc}</span>
+                    </button>
+                `).join('');
+            }
+
+            // ========== 按钮点击事件 ==========
+            function notifyParent(targetId) {
+                // 使用 postMessage 通知父窗口
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'NAVIGATE_TO',
+                        nodeId: targetId
+                    }, '*');
+                }
+
+                // 兼容直接调用父窗口函数
+                if (window.parent && typeof window.parent.navigateToNode === 'function') {
+                    try {
+                        window.parent.navigateToNode(targetId);
+                    } catch (e) {
+                        // 忽略
+                    }
+                }
+            }
+
+            document.querySelectorAll('.big-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const targetId = this.dataset.target;
+                    if (!targetId) return;
+
+                    // 添加点击反馈
+                    this.classList.add('clicked');
+                    setTimeout(() => this.classList.remove('clicked'), 180);
+
+                    // 通知父窗口导航
+                    notifyParent(targetId);
+                    console.log(`[folder.html] 请求导航到: ${targetId}`);
+                });
+            });
+
+            // ========== 页面加载完成后通知父窗口 ==========
+            window.addEventListener('load', function() {
+                if (window.parent) {
+                    window.parent.postMessage({
+                        type: 'FOLDER_READY',
+                        from: 'folder.html',
+                        nodeId: nodeId
+                    }, '*');
+                }
+            });
+
+            console.log(`[folder.html] 已加载，当前节点: ${nodeId}`);
+        })();
+    </script>
+</body>
+</html>

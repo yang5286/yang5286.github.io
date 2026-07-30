@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华语男歌手 · 歌单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 28px 32px;
+            max-width: 820px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #0a1e32;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .meta {
+            color: #64748b;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #eef2f6;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        /* ===== 分组标题 ===== */
+        .group-section {
+            margin-top: 16px;
+            margin-bottom: 4px;
+        }
+
+        .group-section:first-of-type {
+            margin-top: 4px;
+        }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0 2px 0;
+            border-bottom: 2px solid #eef2f6;
+            margin-bottom: 4px;
+        }
+
+        .group-header .group-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #0a1e32;
+        }
+
+        .group-header .group-badge {
+            font-size: 0.7rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0 10px;
+            border-radius: 12px;
+            font-weight: 400;
+        }
+
+        /* ===== 两列歌名列表 ===== */
+        .song-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px 16px;
+        }
+
+        .song-list li {
+            padding: 3px 0;
+            border-bottom: 1px solid #f5f7fa;
+            min-width: 0;
+        }
+
+        .song-list li:nth-last-child(2):nth-child(odd) {
+            border-bottom: none;
+        }
+
+        .song-list li:last-child {
+            border-bottom: none;
+        }
+
+        .song-list a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: #0a1e32;
+            font-size: 0.85rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background 0.12s ease;
+            cursor: pointer;
+            font-family: inherit;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .song-list a:hover {
+            background: #f1f6fd;
+        }
+
+        .song-list a .song-title {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 400;
+            min-width: 0;
+        }
+
+        .song-list a .play-hint {
+            color: #8a9bb0;
+            font-size: 0.6rem;
+            flex-shrink: 0;
+            transition: color 0.15s;
+            width: 24px;
+            text-align: right;
+            opacity: 0.5;
+        }
+
+        .song-list a:hover .play-hint {
+            color: #2a5f8a;
+            opacity: 1;
+        }
+
+        /* ===== 返回按钮 ===== */
+        .back-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #1a4a7a;
+            text-decoration: none;
+            border: 1px solid #d4e2f7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background 0.15s;
+            background: white;
+            font-family: inherit;
+        }
+
+        .back-link:hover {
+            background: #f0f6ff;
+        }
+
+        /* ===== 统计信息 ===== */
+        .stats {
+            color: #8a9bb0;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #f0f4f9;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .stats .stat-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stats .stat-item .num {
+            font-weight: 600;
+            color: #0a1e32;
+        }
+
+        /* ===== 弹窗遮罩（改用 iframe 弹窗） ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            border-radius: 16px;
+            padding: 14px;
+            max-width: 780px;
+            width: 94%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.2s ease;
+        }
+
+        .modal-content iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: none;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* 错误提示覆盖层 */
+        .error-overlay {
+            display: none;
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            bottom: 14px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #e0e0e0;
+            padding: 30px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .error-overlay.show {
+            display: flex;
+        }
+
+        .error-overlay .error-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .error-overlay .error-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #ff6b6b;
+            margin-bottom: 6px;
+        }
+
+        .error-overlay .error-desc {
+            font-size: 0.85rem;
+            color: #a0a0b0;
+            max-width: 400px;
+            line-height: 1.5;
+        }
+
+        /* 在 YouTube 上观看按钮 */
+        .watch-on-youtube {
+            margin-top: 16px;
+            padding: 10px 32px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .watch-on-youtube:hover {
+            background: #cc0000;
+        }
+
+        /* 弹窗内的 "在新窗口打开" 提示 */
+        .open-in-new {
+            color: #888;
+            font-size: 0.7rem;
+            margin-top: 8px;
+        }
+
+        .open-in-new a {
+            color: #5a8ab5;
+            text-decoration: underline;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            font-family: inherit;
+            line-height: 1;
+            z-index: 20;
+        }
+
+        .modal-close:hover {
+            background: #333;
+        }
+
+        .modal-title {
+            color: #e0e0e0;
+            padding: 6px 12px 10px 12px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== 加载动画 ===== */
+        .loading-spinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .loading-spinner.show {
+            display: block;
+        }
+
+        .loading-spinner .spinner {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border: 3px solid #333;
+            border-top: 3px solid #888;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== 动画 ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.94);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 520px) {
+            body {
+                padding: 16px 14px;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .song-list {
+                grid-template-columns: 1fr;
+                gap: 1px;
+            }
+            .song-list a {
+                font-size: 0.82rem;
+                padding: 3px 2px;
+            }
+            .song-list a .play-hint {
+                font-size: 0.6rem;
+                width: 22px;
+            }
+            .modal-content {
+                padding: 10px;
+                width: 96%;
+            }
+            .modal-close {
+                top: -10px;
+                right: -10px;
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
+            .stats {
+                gap: 10px;
+                font-size: 0.7rem;
+            }
+            .group-header .group-name {
+                font-size: 0.8rem;
+            }
+            .error-overlay .error-title {
+                font-size: 0.95rem;
+            }
+            .error-overlay .error-desc {
+                font-size: 0.75rem;
+            }
+            .watch-on-youtube {
+                font-size: 0.8rem;
+                padding: 8px 20px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .song-list a .song-title {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 页面头部 ===== -->
+    <h1>华语男歌手 · 歌单</h1>
+    <div class="meta">请将喜欢的歌曲编号写在订购单里</div>
+
+    <!-- ===== 歌名列表容器 ===== -->
+    <div id="songListContainer">
+        <!-- 由 JavaScript 动态生成 -->
+    </div>
+
+    <!-- ===== 统计信息 ===== -->
+    <div class="stats" id="statsInfo">
+        <!-- 由 JavaScript 动态生成 -->
+    </div>
+
+    <!-- ===== 返回按钮 ===== -->
+    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'project'},'*'); return false;">
+        ← 返回项目
+    </button>
+
+    <!-- ===== 弹窗（用于显示 iframe，但会优雅降级） ===== -->
+    <div class="modal-overlay" id="videoModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModalBtn">✕</button>
+            <div class="modal-title" id="modalTitle">▶ 正在播放</div>
+
+            <!-- 加载提示 -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <div>加载中...</div>
+            </div>
+
+            <!-- 错误提示 -->
+            <div class="error-overlay" id="errorOverlay">
+                <div class="error-icon">⚠️</div>
+                <div class="error-title" id="errorTitle">无法在弹窗中播放</div>
+                <div class="error-desc" id="errorDesc">该视频可能禁止嵌入播放，或视频 ID 无效。</div>
+                <a href="#" class="watch-on-youtube" id="watchOnYoutube" target="_blank">▶ 在 YouTube 中打开</a>
+                <div class="open-in-new">💡 点击上方按钮将在新标签页中打开</div>
+            </div>
+
+            <iframe id="videoIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ============================================================
+            // ★★★ 在这里添加歌曲 ★★★
+            // 格式：{ title: '歌名', youtubeId: '视频ID' }
+            // 只需要纯 ID，例如 'WZy2cn42yME'
+            // ============================================================
+            const songs = [
+                // ---- ----华语女歌手
+                { title: '0001 下辈子还爱你', youtubeId: 'WZy2cn42yME' },
+                { title: '0002 下辈子再陪你永恒', youtubeId: 'zfpoBhrBu_o' },
+                { title: '0003 为何弃我娶了她', youtubeId: '3yHrhaKU_Lw' },
+                { title: '0004 为何爱得如此落魄', youtubeId: 'rc6eiPvqCPk' },
+                { title: '0005 人生不过几回首', youtubeId: 'OWcO1eZ1G-4' },
+                { title: '0006 人生哪还有下辈子', youtubeId: 'MBLY3rhSRtM' },
+                { title: '0007 你是我最想念的人', youtubeId: 'VyGkbmtyegU' },
+                { title: '0008 听风听雨听见你', youtubeId: 'VO-8oAlFtqY' },
+                { title: '0009 就让岁月开成一朵花', youtubeId: 'U7npVieslM8' },
+                { title: '0011 心底那个人', youtubeId: 'VQvythoK4bI' },
+                { title: '0012 想把情人留下', youtubeId: 'wKpYGK1j5gI' },
+                { title: '0013 拿不起丢不下', youtubeId: 'kRh8lDjW_Io' },
+                { title: '0014 最不舍的人', youtubeId: '4vAtOClnHzw' },
+                { title: '0015 有幸邂逅无缘相守', youtubeId: 'lC_j_vSXyEo' },
+                { title: '0016 来来来', youtubeId: 'ArC_EqoRG10' },
+                { title: '0017 来生不再踏上红尘', youtubeId: 'Iy7KeewUWno' },
+                { title: '0019 缘来缘去都是泪', youtubeId: 'MIbt65FtpQA' },
+                { title: '0020 走不进相思门', youtubeId: 'Jhl8M3kzIns' },
+                { title: '0021 错的时间遇见你', youtubeId: 'Mi1RLMaQDO0' },
+                { title: '0022 陪你渡红尘', youtubeId: 'jtLNxuZi6vc' },
+                { title: '0023 风又吹过眼里的愁', youtubeId: 'sTvHt15bYjI' },
+                { title: '0024 风吹冷半生愁', youtubeId: 'pkatbdruHjE' },
+                { title: '0025 痛也不放下', youtubeId: 'sF596ENalJw' },
+                { title: '0026 愛你不後悔', youtubeId: 'Jc-HISOkZNs' },
+                { title: '0027 你在我心里住了很久', youtubeId: 'ppfluhTSR38' },
+                { title: '0028 半生孤獨', youtubeId: 'PvYtBD7_qfw' },
+                { title: '0029 身在紅塵情難斷', youtubeId: 'B84mKn-pq6U' },
+                { title: '0030 如果真心被辜負', youtubeId: 'mZ24JiBCAgw' },
+                { title: '0031 黄昏尽晚霞', youtubeId: '7DL3C4ZWBF0' },            
+                { title: '0032 含著眼淚放你走', youtubeId: 'i1lnfv9A_QQ' },
+                { title: '0033 為愛等候', youtubeId: 'oEUiCHrTWzA' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' },
+                { title: '0', youtubeId: '' }
+            ];
+
+            // ============================================================
+
+            // ========== 工具：验证视频 ID ==========
+            function isValidVideoId(id) {
+                return /^[a-zA-Z0-9_-]{11}$/.test(id);
+            }
+
+            // ========== 按字数分组 ==========
+            function getWordCount(title) {
+                const trimmed = title.trim();
+                if (trimmed === '') return 0;
+                // 移除数字和标点后计算字数
+                const chars = trimmed.replace(/[\d\s\p{P}]/gu, '').length;
+                return chars || trimmed.replace(/[\s\p{P}]/gu, '').length;
+            }
+
+            // 分组
+            const groups = {};
+            let totalSongs = 0;
+
+            songs.forEach(song => {
+                const count = getWordCount(song.title);
+                if (!groups[count]) {
+                    groups[count] = [];
+                }
+                groups[count].push(song);
+                totalSongs++;
+            });
+
+            // 获取排序后的分组键（按字数从小到大）
+            const sortedKeys = Object.keys(groups).map(Number).sort((a, b) => a - b);
+
+            // 字数后缀
+            function getGroupSuffix(count) {
+                if (count === 1) return '一字部';
+                if (count === 2) return '二字部';
+                if (count === 3) return '三字部';
+                if (count === 4) return '四字部';
+                if (count === 5) return '五字部';
+                if (count === 6) return '六字部';
+                if (count === 7) return '七字部';
+                if (count === 8) return '八字部';
+                if (count === 9) return '九字部';
+                if (count === 10) return '十字部';
+                return `${count}字部`;
+            }
+
+            // ========== 渲染分组列表 ==========
+            const container = document.getElementById('songListContainer');
+            const statsInfo = document.getElementById('statsInfo');
+
+            let html = '';
+
+            sortedKeys.forEach(count => {
+                const groupSongs = groups[count];
+                if (!groupSongs || groupSongs.length === 0) return;
+
+                const suffix = getGroupSuffix(count);
+                
+                html += `
+                    <div class="group-section">
+                        <div class="group-header">
+                            <span class="group-name">${suffix}</span>
+                            <span class="group-badge">${groupSongs.length} 首</span>
+                        </div>
+                        <ul class="song-list">
+                `;
+
+                groupSongs.forEach(song => {
+                    // 验证视频 ID
+                    const valid = isValidVideoId(song.youtubeId);
+                    const youtubeUrl = `https://www.youtube.com/watch?v=${song.youtubeId}`;
+                    html += `
+                        <li>
+                            <a href="${youtubeUrl}" target="_blank" 
+                               data-youtube-id="${song.youtubeId}" 
+                               data-title="${song.title}"
+                               class="song-link">
+                                <span class="song-title">${song.title}</span>
+                                <span class="play-hint">▶</span>
+                            </a>
+                        </li>
+                    `;
+                });
+
+                html += `
+                        </ul>
+                    </div>
+                `;
+            });
+
+            if (totalSongs === 0) {
+                container.innerHTML = `
+                    <div style="color:#8a9bb0;padding:24px 0;text-align:center;font-size:0.95rem;">
+                        暂无歌曲
+                    </div>
+                `;
+            } else {
+                container.innerHTML = html;
+            }
+
+            // ========== 统计信息 ==========
+            let statsHtml = '';
+            sortedKeys.forEach(count => {
+                const groupSongs = groups[count];
+                const suffix = getGroupSuffix(count);
+                statsHtml += `
+                    <span class="stat-item">
+                        ${suffix} <span class="num">${groupSongs.length}</span> 首
+                    </span>
+                `;
+            });
+            statsHtml += `
+                <span class="stat-item" style="color:#64748b;font-weight:500;">
+                    总计 <span class="num">${totalSongs}</span> 首
+                </span>
+            `;
+            statsInfo.innerHTML = statsHtml;
+
+            // ============================================================
+            // ★★★ 点击歌名 → 直接跳转 YouTube（在新标签页打开）★★★
+            // 不再使用 iframe 弹窗，因为很多视频禁止嵌入播放
+            // ============================================================
+            // 所有链接已使用 target="_blank" 直接打开 YouTube
+            // 不需要额外的 JavaScript 处理
+
+            // ========== 页面加载完成通知父窗口 ==========
+            window.addEventListener('load', function() {
+                if (window.parent) {
+                    window.parent.postMessage({
+                        type: 'ALPHA_READY',
+                        from: 'alpha.html'
+                    }, '*');
+                }
+                console.log(`[alpha.html] 已加载，共 ${totalSongs} 首歌曲`);
+                console.log('[alpha.html] 点击歌名将在新标签页打开 YouTube');
+            });
+
+        })();
+    </script>
+</body>
+</html>
