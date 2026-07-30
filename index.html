@@ -1,10 +1,401 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <title>Hello GitHub Pages</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌曲试听</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            background: #f4f7fc;
+            overflow: hidden;
+        }
+
+        /* ===== 左侧导航 ===== */
+        .nav-side {
+            width: 300px;
+            min-width: 260px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            overflow-y: auto;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .nav-side h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0b1e33;
+            letter-spacing: 0.3px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eef2f6;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-side h2::before {
+            content: "🌳";
+            font-size: 1.4rem;
+        }
+
+        .tree {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tree li {
+            list-style: none;
+            margin: 2px 0;
+        }
+
+        .tree .node {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px 8px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s;
+            color: #1e2a3a;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .tree .node:hover {
+            background: #eef3fa;
+            color: #0a2647;
+        }
+
+        .tree .node.active {
+            background: #d4e2f7;
+            color: #0b2b4a;
+            font-weight: 600;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .tree .node .toggle-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #5e6f8d;
+            transition: transform 0.2s;
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .tree .node .toggle-icon.expanded {
+            transform: rotate(90deg);
+        }
+
+        .tree .node .node-label {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .tree .children {
+            list-style: none;
+            padding-left: 26px;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.2s;
+            margin-top: 0;
+        }
+
+        .tree .children.open {
+            max-height: 800px;
+            opacity: 1;
+            margin-top: 4px;
+        }
+
+        .tree .children .node {
+            padding-left: 16px;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        .tree .children .node .toggle-icon {
+            font-size: 0.75rem;
+        }
+
+        .tree .node .leaf-icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            color: #8a9bb0;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .tree .node .leaf-icon::before {
+            content: "•";
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+
+        /* ===== 右侧主内容 ===== */
+        .main-content {
+            flex: 1;
+            padding: 20px 24px;
+            background: #f8faff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #contentFrame {
+            flex: 1;
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 8px 24px rgba(0, 20, 40, 0.04);
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 700px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow: auto;
+            }
+            .nav-side {
+                width: 100%;
+                height: auto;
+                min-height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                position: relative;
+                padding: 16px;
+            }
+            .main-content {
+                height: 60vh;
+                padding: 16px;
+            }
+            #contentFrame {
+                border-radius: 12px;
+            }
+        }
+
+        .tree .node.active .toggle-icon {
+            color: #1a4a7a;
+        }
+    </style>
 </head>
 <body>
-  <h1>我的第一个 GitHub Pages 网站</h1>
-  <p>成功上线啦！</p>
+
+    <!-- 左侧导航 -->
+    <nav class="nav-side" aria-label="树状导航">
+        <h2>歌曲试听</h2>
+        <ul class="tree" id="treeContainer"></ul>
+    </nav>
+
+    <!-- 右侧主内容区 -->
+    <main class="main-content">
+        <iframe id="contentFrame" src="pages/home.html"></iframe>
+    </main>
+
+    <script>
+        (function() {
+            // ========== 树状数据 ==========
+            const treeData = [{
+                id: 'root',
+                label: '📂 全部歌曲',
+                children: [{
+                    id: 'project',
+                    label: '华语歌',
+                    children: [
+                        { id: 'project-alpha', label: '男歌手', page: 'pages/HuaYu_Nan.html' },
+                        { id: 'project-beta', label: '女歌手', page: 'pages/HuaYu_Nv.html' },
+                        { id: 'project-gamma', label: '男女合唱', page: 'pages/HuaYu_NanNv.html' }
+                    ]
+                }, {
+                    id: 'team',
+                    label: '福建歌',
+                    children: [
+                        { id: 'team-design', label: '男歌手', page: 'pages/FuJian_Nan.html' },
+                        { id: 'team-dev', label: '女歌手', page: 'pages/FuJian_Nv.html' },
+                        { id: 'team-ops', label: '男女合唱', page: 'pages/FuJian_NanNv.html' }
+                    ]
+                }, ]
+            }];
+
+            // 扁平映射
+            const nodeMap = new Map();
+
+            function flattenTree(nodes, parentId = null) {
+                for (const node of nodes) {
+                    nodeMap.set(node.id, { ...node, parentId });
+                    if (node.children) {
+                        flattenTree(node.children, node.id);
+                    }
+                }
+            }
+            flattenTree(treeData);
+
+            // ========== DOM 引用 ==========
+            const treeContainer = document.getElementById('treeContainer');
+            const contentFrame = document.getElementById('contentFrame');
+            let activeId = 'root';
+
+            // ========== 渲染树 ==========
+            function renderTree(nodes, parentUl, level = 0) {
+                for (const node of nodes) {
+                    const li = document.createElement('li');
+                    li.dataset.nodeId = node.id;
+
+                    const hasChildren = node.children && node.children.length > 0;
+
+                    const nodeDiv = document.createElement('div');
+                    nodeDiv.className = 'node';
+                    if (node.id === activeId) nodeDiv.classList.add('active');
+
+                    const toggleSpan = document.createElement('span');
+                    toggleSpan.className = 'toggle-icon';
+                    if (hasChildren) {
+                        toggleSpan.textContent = '▶';
+                        if (level === 0) toggleSpan.classList.add('expanded');
+                    } else {
+                        toggleSpan.className = 'leaf-icon';
+                        toggleSpan.textContent = '';
+                    }
+
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'node-label';
+                    labelSpan.textContent = node.label;
+
+                    nodeDiv.appendChild(toggleSpan);
+                    nodeDiv.appendChild(labelSpan);
+
+                    nodeDiv.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (hasChildren) {
+                            const childrenList = li.querySelector('.children');
+                            if (childrenList) {
+                                childrenList.classList.toggle('open');
+                                const icon = this.querySelector('.toggle-icon');
+                                if (icon) {
+                                    icon.classList.toggle('expanded');
+                                }
+                            }
+                        }
+                        updateContent(node.id);
+                        setActiveNode(node.id);
+                    });
+
+                    li.appendChild(nodeDiv);
+
+                    if (hasChildren) {
+                        const childUl = document.createElement('ul');
+                        childUl.className = 'children';
+                        if (level === 0) childUl.classList.add('open');
+                        renderTree(node.children, childUl, level + 1);
+                        li.appendChild(childUl);
+                    }
+
+                    parentUl.appendChild(li);
+                }
+            }
+
+            // ========== 辅助函数 ==========
+            function setActiveNode(id) {
+                document.querySelectorAll('.tree .node.active').forEach(el => el.classList.remove('active'));
+                const allNodes = document.querySelectorAll('.tree .node');
+                for (const nd of allNodes) {
+                    const li = nd.closest('li');
+                    if (li && li.dataset.nodeId === id) {
+                        nd.classList.add('active');
+                        break;
+                    }
+                }
+                activeId = id;
+            }
+
+            function updateContent(nodeId) {
+                const node = nodeMap.get(nodeId);
+                if (node && node.page) {
+                    contentFrame.src = node.page;
+                } else if (node) {
+                    // 父节点加载目录页，传递参数
+                    contentFrame.src = 'pages/folder.html?node=' + nodeId;
+                } else {
+                    contentFrame.src = 'pages/home.html';
+                }
+            }
+
+            // ========== 暴露给 iframe 的全局方法 ==========
+            window.navigateToNode = function(nodeId) {
+                const node = nodeMap.get(nodeId);
+                if (node) {
+                    // 展开父节点路径
+                    expandPath(nodeId);
+                    updateContent(nodeId);
+                    setActiveNode(nodeId);
+                }
+            };
+
+            // 展开路径
+            function expandPath(nodeId) {
+                let currentId = nodeId;
+                while (currentId) {
+                    const node = nodeMap.get(currentId);
+                    if (!node) break;
+                    const li = document.querySelector(`li[data-node-id="${currentId}"]`);
+                    if (li) {
+                        const childrenList = li.querySelector('.children');
+                        if (childrenList) {
+                            childrenList.classList.add('open');
+                            const nodeDiv = li.querySelector('.node .toggle-icon');
+                            if (nodeDiv && nodeDiv.classList.contains('toggle-icon')) {
+                                nodeDiv.classList.add('expanded');
+                            }
+                        }
+                    }
+                    currentId = node.parentId;
+                }
+            }
+
+            // ========== 监听来自 iframe 的 postMessage ==========
+            window.addEventListener('message', function(event) {
+                const data = event.data;
+                if (data && data.type === 'NAVIGATE_TO') {
+                    const nodeId = data.nodeId;
+                    if (nodeId && nodeMap.has(nodeId)) {
+                        expandPath(nodeId);
+                        updateContent(nodeId);
+                        setActiveNode(nodeId);
+                    }
+                }
+            });
+
+            // ========== 初始化 ==========
+            function init() {
+                treeContainer.innerHTML = '';
+                renderTree(treeData, treeContainer, 0);
+                // 默认加载首页
+                contentFrame.src = 'pages/home.html';
+                setActiveNode('root');
+            }
+
+            init();
+
+            // 控制台暴露方便调试
+            window.__nodeMap = nodeMap;
+        })();
+    </script>
 </body>
 </html>
