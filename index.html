@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>歌曲试听</title>
+    <title>树状导航 · 独立页面</title>
     <style>
         * {
             margin: 0;
@@ -19,17 +19,83 @@
             overflow: hidden;
         }
 
+        /* ===== 汉堡菜单按钮 ===== */
+        .menu-toggle {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1000;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: all 0.25s ease;
+            font-size: 1.2rem;
+        }
+
+        .menu-toggle:hover {
+            background: #f0f6ff;
+            border-color: #b3c9e0;
+            box-shadow: 0 6px 16px rgba(0, 20, 40, 0.10);
+        }
+
+        .menu-toggle .bar {
+            display: block;
+            width: 22px;
+            height: 2.5px;
+            background: #1e2a3a;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle .bar:nth-child(2) {
+            width: 16px;
+        }
+
+        /* 菜单打开时汉堡变叉 */
+        .menu-toggle.open .bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+            width: 22px;
+        }
+
+        .menu-toggle.open .bar:nth-child(2) {
+            opacity: 0;
+            width: 0;
+        }
+
+        .menu-toggle.open .bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+            width: 22px;
+        }
+
         /* ===== 左侧导航 ===== */
         .nav-side {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 300px;
             min-width: 260px;
+            height: 100vh;
             background: #ffffff;
             border-right: 1px solid #e2e8f0;
             padding: 24px 16px;
             overflow-y: auto;
-            height: 100vh;
-            position: sticky;
-            top: 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.04);
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+        }
+
+        .nav-side.open {
+            transform: translateX(0);
         }
 
         .nav-side h2 {
@@ -50,6 +116,27 @@
             font-size: 1.4rem;
         }
 
+        /* 导航遮罩（点击关闭） */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(2px);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ===== 树状结构 ===== */
         .tree {
             list-style: none;
             padding-left: 0;
@@ -146,6 +233,10 @@
             vertical-align: middle;
         }
 
+        .tree .node.active .toggle-icon {
+            color: #1a4a7a;
+        }
+
         /* ===== 右侧主内容 ===== */
         .main-content {
             flex: 1;
@@ -155,6 +246,15 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* 导航打开时内容区留出空间（仅大屏） */
+        @media (min-width: 769px) {
+            .main-content.nav-open {
+                margin-left: 300px;
+            }
         }
 
         #contentFrame {
@@ -167,45 +267,57 @@
         }
 
         /* ===== 响应式 ===== */
-        @media (max-width: 700px) {
-            body {
-                flex-direction: column;
-                height: auto;
-                overflow: auto;
-            }
+        @media (max-width: 768px) {
             .nav-side {
-                width: 100%;
-                height: auto;
-                min-height: 200px;
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-                position: relative;
-                padding: 16px;
+                width: 85%;
+                max-width: 320px;
             }
+
+            .main-content.nav-open {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                top: 12px;
+                left: 12px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
             .main-content {
-                height: 60vh;
-                padding: 16px;
+                padding: 12px 10px;
             }
             #contentFrame {
                 border-radius: 12px;
             }
-        }
-
-        .tree .node.active .toggle-icon {
-            color: #1a4a7a;
+            .nav-side {
+                padding: 16px 12px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 左侧导航 -->
-    <nav class="nav-side" aria-label="树状导航">
-        <h2>歌曲试听</h2>
+    <!-- ===== 汉堡菜单按钮 ===== -->
+    <button class="menu-toggle" id="menuToggle" aria-label="切换导航菜单">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+
+    <!-- ===== 遮罩 ===== -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- ===== 左侧导航 ===== -->
+    <nav class="nav-side" id="navSide" aria-label="树状导航">
+        <h2>导航</h2>
         <ul class="tree" id="treeContainer"></ul>
     </nav>
 
-    <!-- 右侧主内容区 -->
-    <main class="main-content">
+    <!-- ===== 右侧主内容区 ===== -->
+    <main class="main-content" id="mainContent">
         <iframe id="contentFrame" src="pages/home.html"></iframe>
     </main>
 
@@ -250,7 +362,46 @@
             // ========== DOM 引用 ==========
             const treeContainer = document.getElementById('treeContainer');
             const contentFrame = document.getElementById('contentFrame');
+            const navSide = document.getElementById('navSide');
+            const navOverlay = document.getElementById('navOverlay');
+            const menuToggle = document.getElementById('menuToggle');
+            const mainContent = document.getElementById('mainContent');
+
             let activeId = 'root';
+            let isNavOpen = false;
+
+            // ========== 导航切换 ==========
+            function toggleNav(open) {
+                isNavOpen = (open !== undefined) ? open : !isNavOpen;
+
+                navSide.classList.toggle('open', isNavOpen);
+                navOverlay.classList.toggle('active', isNavOpen);
+                menuToggle.classList.toggle('open', isNavOpen);
+                mainContent.classList.toggle('nav-open', isNavOpen);
+
+                // 按钮 aria 属性
+                menuToggle.setAttribute('aria-expanded', isNavOpen);
+            }
+
+            function closeNav() {
+                if (isNavOpen) toggleNav(false);
+            }
+
+            // 点击菜单按钮切换
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleNav();
+            });
+
+            // 点击遮罩关闭
+            navOverlay.addEventListener('click', closeNav);
+
+            // ESC 键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isNavOpen) {
+                    closeNav();
+                }
+            });
 
             // ========== 渲染树 ==========
             function renderTree(nodes, parentUl, level = 0) {
@@ -295,6 +446,10 @@
                         }
                         updateContent(node.id);
                         setActiveNode(node.id);
+                        // 移动端自动关闭导航
+                        if (window.innerWidth <= 768) {
+                            closeNav();
+                        }
                     });
 
                     li.appendChild(nodeDiv);
@@ -330,7 +485,6 @@
                 if (node && node.page) {
                     contentFrame.src = node.page;
                 } else if (node) {
-                    // 父节点加载目录页，传递参数
                     contentFrame.src = 'pages/folder.html?node=' + nodeId;
                 } else {
                     contentFrame.src = 'pages/home.html';
@@ -341,14 +495,15 @@
             window.navigateToNode = function(nodeId) {
                 const node = nodeMap.get(nodeId);
                 if (node) {
-                    // 展开父节点路径
                     expandPath(nodeId);
                     updateContent(nodeId);
                     setActiveNode(nodeId);
+                    if (window.innerWidth <= 768) {
+                        closeNav();
+                    }
                 }
             };
 
-            // 展开路径
             function expandPath(nodeId) {
                 let currentId = nodeId;
                 while (currentId) {
@@ -378,23 +533,42 @@
                         expandPath(nodeId);
                         updateContent(nodeId);
                         setActiveNode(nodeId);
+                        if (window.innerWidth <= 768) {
+                            closeNav();
+                        }
                     }
                 }
+            });
+
+            // ========== 窗口大小变化时自动处理 ==========
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 768 && isNavOpen) {
+                        // 大屏保持打开
+                    } else if (window.innerWidth <= 768 && isNavOpen) {
+                        // 小屏保持当前状态
+                    }
+                }, 200);
             });
 
             // ========== 初始化 ==========
             function init() {
                 treeContainer.innerHTML = '';
                 renderTree(treeData, treeContainer, 0);
-                // 默认加载首页
                 contentFrame.src = 'pages/home.html';
                 setActiveNode('root');
+                // 默认导航关闭
+                toggleNav(false);
+                menuToggle.setAttribute('aria-expanded', 'false');
             }
 
             init();
 
             // 控制台暴露方便调试
             window.__nodeMap = nodeMap;
+            window.toggleNav = toggleNav;
         })();
     </script>
 </body>
