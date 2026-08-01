@@ -454,8 +454,8 @@
     </div>
 
     <!-- ===== 返回按钮 ===== -->
-    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'project'},'*'); return false;">
-        ← 返回项目
+    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'root'},'*'); return false;">
+        ← 返回
     </button>
 
     <!-- ===== 弹窗（用于显示 iframe，但会优雅降级） ===== -->
@@ -492,39 +492,62 @@
             // ============================================================
             const songs = [
                 // ---- 一字部 ----
-                { title: '0001 下辈子还爱你', youtubeId: 'WZy2cn42yME' },
-                { title: '0002 下辈子再陪你永恒', youtubeId: 'zfpoBhrBu_o' },
-                { title: 'L', youtubeId: 'VY1l2-hmXpE' },
-                { title: 'O', youtubeId: '9bZkp7q19f0' },
-
-                // ---- 二字部 ----
-                { title: 'Happy', youtubeId: 'ZbZSe6N_BXs' },
-                { title: 'Demons', youtubeId: 'mWRsgZuwf_8' },
-                { title: 'Ride', youtubeId: 'Pw-0pbY9JeU' },
-                { title: 'Closer', youtubeId: 'PT2_F-1esPk' },
-                { title: 'Heathens', youtubeId: 'UprcpdwuwCg' },
-                { title: 'Believer', youtubeId: '7wtfhZwyrcc' },
-                { title: 'Radioactive', youtubeId: 'ktvTqknDobU' },
-
-                // ---- 三字部 ----
-                { title: 'Uptown Funk', youtubeId: 'OPf0YbXqDm0' },
-                { title: 'Shape of You', youtubeId: 'JGwWNGJdvx8' },
-                { title: 'See You Again', youtubeId: 'RgKAFK5djSk' },
-                { title: 'All of Me', youtubeId: '450p7goxZqg' },
-
-                // ---- 四字部 ----
-                { title: 'GANGNAM STYLE', youtubeId: '9bZkp7q19f0' },
-                { title: 'Despacito', youtubeId: 'kJQP7kiw5Fk' },
-                { title: 'Counting Stars', youtubeId: 'hT_nvWreIhg' },
-                { title: 'Stressed Out', youtubeId: 'pXRviuL6vMY' },
-
-                // ---- 五字部 ----
-                { title: 'Never Gonna Give You Up', youtubeId: 'dQw4w9WgXcQ' },
-                { title: 'Something Just Like This', youtubeId: 'FM7MFYoylVs' },
-                { title: 'Thinking Out Loud', youtubeId: 'lp-EO5I60KA' },
-
-                // ---- 六字部 ----
-                { title: 'YouTube Official Intro', youtubeId: 'VY1l2-hmXpE' }
+                { title: 'F001 今生缘', youtubeId: 'kjpk1VEFwXw' },
+                { title: 'F002 烟酒人生', youtubeId: 'GN62IlF4A1Q' },
+                { title: 'F003 爱情啊遮尔苦', youtubeId: 'kwMq9q1MUXE' },
+                { title: 'F004 出外人的愿望', youtubeId: 'dBzkQN1fPmM' },
+                { title: 'F005 断情花', youtubeId: 'VHuQVaoDOG0' },
+                { title: 'F006 我欲爱甘无别人', youtubeId: 'ODxBKH0QZ7E' },
+                { title: 'F007 山茶花', youtubeId: 'BuT3N-o8QFE' },
+                { title: 'F008 错爱的人', youtubeId: 'w5POPn9LXAs' },
+                { title: 'F009 孤单探戈', youtubeId: 'O4xcs5z89_8' },
+                { title: 'F010 风过梦也空', youtubeId: '0LDlWbfj9wE' },
+                { title: 'F011 你心如铁', youtubeId: 'YtQDcN6ACeE' },
+                { title: 'F012 为你醉归瞑', youtubeId: 'iTYxcmSuSAc' },
+                { title: 'F013 薄情的人', youtubeId: 'AfcmWPzikW8' },
+                { title: 'F014 绝情缘', youtubeId: '-UsNGf9w7EY' },
+                { title: 'F015 一生的伴', youtubeId: 'qagGS23Fc6M' },
+                { title: 'F016 赢过人生', youtubeId: 'Hdc30uaQqYs' },
+                { title: 'F017 九月玫瑰', youtubeId: 'JM-aK4aDF14' },
+                { title: 'F018 爱你一世人', youtubeId: 'vHf5zvtU4ow' },
+                { title: 'F019 幸福干杯', youtubeId: 'LIDq-jdJTjI' },
+                { title: 'F020 胭脂泪', youtubeId: '2WPasWjlioQ' },
+                { title: 'F021 胭脂酒', youtubeId: 'iy0R1rPwLBQ' },
+                { title: 'F022 痴情憨代先', youtubeId: 'KMVebqNEbnc' },
+                { title: 'F023 伤心尾班车', youtubeId: '0l10EVdPLMU' },
+                { title: 'F024 爱你无分寸', youtubeId: 'Mib2UkRFiaI' },
+                { title: 'F025 谁对谁不对', youtubeId: 'mbY9KVzzmYg' },
+                { title: 'F026 爱有个性', youtubeId: 'zrDosZv3An0' },
+                { title: 'F027 爱你甘有过分', youtubeId: 'zvGhtQOvTJ0' },
+                { title: 'F028 付出真情的人总是伤心', youtubeId: 'lr2cxQdlfY4' },
+                { title: 'F029 千里缘', youtubeId: 'KJ_Gkx3RLMQ' },
+                { title: 'F030 回头路', youtubeId: 'hTyEbnOSDik' },
+                { title: 'F031 女人心', youtubeId: 'uRlT1rCfJp8' },
+                { title: 'F032 如果会当', youtubeId: 'f-YHyY0LRb4' },
+                { title: 'F033 心头梦', youtubeId: 'jznm1ku0_-g' },
+                { title: 'F034 恋恋高铁站', youtubeId: 'qXxUAzlRZ0M' },
+                { title: 'F035 情网', youtubeId: 'CTTcqBDWSgw' },
+                { title: 'F036 放袂記我做袂到', youtubeId: 'thR20PFTEW8' },
+                { title: 'F037 无声的夜车', youtubeId: 'e0vyVMbbd2c' },
+                { title: 'F038 无缘的情批', youtubeId: 'MspKNioUy4I' },
+                { title: 'F039 旧批信', youtubeId: 't_CQulHcUxE' },
+                { title: 'F040 求月老', youtubeId: 'm9H8QeqWNp8' },
+                { title: 'F041 深情比纸薄', youtubeId: 'r1ray3GijIU' },
+                { title: 'F042 烧肉粽', youtubeId: 'RHnNshg8pfo' },
+                { title: 'F043 爱的批纸', youtubeId: 'z3a__MobvbU' },
+                { title: 'F044 犹原爱着你', youtubeId: 'DzdWiyq1dWE' },
+                { title: 'F045 疼惜阮的命', youtubeId: 'Twy598Smgps' },
+                { title: 'F046 瞑雨', youtubeId: 'Kj2MbyOx210' },
+                { title: 'F047 阿嫲感谢你', youtubeId: 'fkNA9uVhz9A' },
+                { title: 'F048 风中的等待', youtubeId: 'ew8RNZJ5_pI' },
+                { title: 'F049 风中相思', youtubeId: '624B4_0yMio' },
+                { title: 'F050 风雨的情分', youtubeId: 'QU_-pRPVDxg' },
+                { title: 'F052 想你的暗暝', youtubeId: 'l8oO996s3bY' },
+                { title: 'F054 贪恋的酒', youtubeId: 'xdKntRnAZ0M' },
+                { title: 'F064 探戈戀歌', youtubeId: 'AUFEiXIlhsg' },
+                { title: 'F071 你哪會這無情', youtubeId: 'zJxgjBtTgpM' },
+                { title: 'F072 難忘的記誌', youtubeId: '6J6UyVgzERg' },
+                { title: 'F073 愛毋著', youtubeId: '4LJCxWaOCQA' }
             ];
 
             // ============================================================

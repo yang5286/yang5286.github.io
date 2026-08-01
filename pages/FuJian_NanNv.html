@@ -440,7 +440,7 @@
 <body>
 
     <!-- ===== 页面头部 ===== -->
-    <h1>华语男歌手 · 歌单</h1>
+    <h1>福建男女对唱 · 歌单</h1>
     <div class="meta">请将喜欢的歌曲编号写在订购单里</div>
 
     <!-- ===== 歌名列表容器 ===== -->
@@ -454,8 +454,8 @@
     </div>
 
     <!-- ===== 返回按钮 ===== -->
-    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'project'},'*'); return false;">
-        ← 返回项目
+    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'root'},'*'); return false;">
+        ← 返回
     </button>
 
     <!-- ===== 弹窗（用于显示 iframe，但会优雅降级） ===== -->
@@ -492,39 +492,28 @@
             // ============================================================
             const songs = [
                 // ---- 一字部 ----
-                { title: '0001 下辈子还爱你', youtubeId: 'WZy2cn42yME' },
-                { title: '0002 下辈子再陪你永恒', youtubeId: 'zfpoBhrBu_o' },
-                { title: 'L', youtubeId: 'VY1l2-hmXpE' },
-                { title: 'O', youtubeId: '9bZkp7q19f0' },
-
-                // ---- 二字部 ----
-                { title: 'Happy', youtubeId: 'ZbZSe6N_BXs' },
-                { title: 'Demons', youtubeId: 'mWRsgZuwf_8' },
-                { title: 'Ride', youtubeId: 'Pw-0pbY9JeU' },
-                { title: 'Closer', youtubeId: 'PT2_F-1esPk' },
-                { title: 'Heathens', youtubeId: 'UprcpdwuwCg' },
-                { title: 'Believer', youtubeId: '7wtfhZwyrcc' },
-                { title: 'Radioactive', youtubeId: 'ktvTqknDobU' },
-
-                // ---- 三字部 ----
-                { title: 'Uptown Funk', youtubeId: 'OPf0YbXqDm0' },
-                { title: 'Shape of You', youtubeId: 'JGwWNGJdvx8' },
-                { title: 'See You Again', youtubeId: 'RgKAFK5djSk' },
-                { title: 'All of Me', youtubeId: '450p7goxZqg' },
-
-                // ---- 四字部 ----
-                { title: 'GANGNAM STYLE', youtubeId: '9bZkp7q19f0' },
-                { title: 'Despacito', youtubeId: 'kJQP7kiw5Fk' },
-                { title: 'Counting Stars', youtubeId: 'hT_nvWreIhg' },
-                { title: 'Stressed Out', youtubeId: 'pXRviuL6vMY' },
-
-                // ---- 五字部 ----
-                { title: 'Never Gonna Give You Up', youtubeId: 'dQw4w9WgXcQ' },
-                { title: 'Something Just Like This', youtubeId: 'FM7MFYoylVs' },
-                { title: 'Thinking Out Loud', youtubeId: 'lp-EO5I60KA' },
-
-                // ---- 六字部 ----
-                { title: 'YouTube Official Intro', youtubeId: 'VY1l2-hmXpE' }
+                { title: 'F051 永遠不分開', youtubeId: 'MTC2JG3cHLM' },
+                { title: 'F055 今生的新娘', youtubeId: 'MZrtbUa9fHI' },
+                { title: 'F056 一生的愛攏是為你', youtubeId: 'dxdE6mzxvUQ' },
+                { title: 'F061 兄妹情', youtubeId: 'Xxbul0hCrZQ' },
+                { title: 'F063 手中寶', youtubeId: 'wqtXzug8_BM' },
+                { title: 'F065 一生的伴', youtubeId: '3qQNsFJPqqg' },
+                { title: 'F066 雨中情綿綿', youtubeId: 'szgaAQ6owko' },
+                { title: 'F067 疼惜入心肝', youtubeId: 'uCZwB6CXtsw' },
+                { title: 'F068 若是不爱我', youtubeId: '8LqcoWZ22es' },
+                { title: 'F069 夢醒等無人', youtubeId: 'pfSiLqSUlWc' },
+                { title: 'F070 一領鴛鴦被', youtubeId: 'Iuq2xR_QlE4' },
+                { title: 'F075 情難斷夢抹醒', youtubeId: 'PliUOZyxfwI' },
+                { title: 'F078 甜蜜成雙對', youtubeId: 'BnMuxlvPxdY' },
+                { title: 'F079 上水的交換', youtubeId: 'OpJDPgeV4wI' },
+                { title: 'F080 緣份天安排', youtubeId: '2Hro23s-HBY' },
+                { title: 'F081 遙遠的戀情', youtubeId: '--dZgezc-fA' },
+                { title: 'F082 有你就有我', youtubeId: 'wJ2YIVJRbP0' },
+                { title: 'F083 無你惦身邊', youtubeId: 'EwInI95_Tlc' },
+                { title: 'F085 鹽山之戀', youtubeId: 'xZvZgGBTjA8' },
+                { title: 'F086 千金無地買', youtubeId: '-1tvyt8kBFU' },
+                { title: 'F088 爱你毋时假', youtubeId: 'ADQryEdyehc' },
+                { title: 'F090 風中無緣花', youtubeId: 'XYpm3etha3k' }
             ];
 
             // ============================================================
@@ -561,35 +550,19 @@
 
             // 字数后缀
             function getGroupSuffix(count) {
-                if (count === 5) return '一字部';
-                if (count === 6) return '二字部';
-                if (count === 7) return '三字部';
-                if (count === 8) return '四字部';
-                if (count === 9) return '五字部';
-                if (count === 10) return '六字部';
-                if (count === 11) return '七字部';
-                if (count === 12) return '八字部';
-                if (count === 13) return '九字部';
-                if (count === 14) return '十字部';
+                if (count === 2) return '一字部';
+                if (count === 3) return '二字部';
+                if (count === 4) return '三字部';
+                if (count === 5) return '四字部';
+                if (count === 6) return '五字部';
+                if (count === 7) return '六字部';
+                if (count === 8) return '七字部';
+                if (count === 9) return '八字部';
+                if (count === 10) return '九字部';
+                if (count === 11) return '十字部';
                 return `${count}字部`;
             }
 
-            // 分组图标
-            function getGroupIcon(count) {
-                const icons = {
-                    1: '①',
-                    2: '②',
-                    3: '③',
-                    4: '④',
-                    5: '⑤',
-                    6: '⑥',
-                    7: '⑦',
-                    8: '⑧',
-                    9: '⑨',
-                    10: '⑩'
-                };
-                return icons[count] || '📝';
-            }
 
             // ========== 渲染分组列表 ==========
             const container = document.getElementById('songListContainer');
@@ -607,7 +580,7 @@
                 html += `
                     <div class="group-section">
                         <div class="group-header">
-                            <span class="group-name">${icon} ${suffix}</span>
+                            <span class="group-name">${suffix}</span>
                             <span class="group-badge">${groupSongs.length} 首</span>
                         </div>
                         <ul class="song-list">

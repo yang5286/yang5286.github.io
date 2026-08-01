@@ -175,7 +175,7 @@
     <!-- ===== 页面头部 ===== -->
     <header class="page-header">
         <h1 id="pageTitle">华语歌</h1>
-        <div class="breadcrumb">请选择歌手性别：<span id="pathDisplay"></span></div>
+        <div class="breadcrumb"><span id="pathDisplay"></span></div>
     </header>
 
     <!-- ===== 三个大按钮 ===== -->
@@ -196,7 +196,6 @@
                 'root': '全部歌曲',
                 'project': '华语歌',
                 'team': '福建歌',
-                'docs': '文档'
             };
 
             // ========== 子节点配置（包含图标和描述） ==========
@@ -211,15 +210,9 @@
                     { id: 'team-dev', label: '女歌手', icon: '', desc: '' },
                     { id: 'team-ops', label: '男女对唱', icon: '', desc: '' }
                 ],
-                'docs': [
-                    { id: 'docs-guide', label: '使用指南', icon: '📖', desc: '平台使用指南' },
-                    { id: 'docs-api', label: 'API 参考', icon: '🔗', desc: 'RESTful API 文档' },
-                    { id: 'docs-faq', label: '常见问题', icon: '❓', desc: '问题汇总与解答' }
-                ],
                 'root': [
-                    { id: 'project', label: '项目', icon: '📁', desc: '查看所有项目' },
-                    { id: 'team', label: '团队', icon: '👥', desc: '团队与成员' },
-                    { id: 'docs', label: '文档', icon: '📄', desc: '文档中心' }
+                    { id: 'project', label: '<h1>华语歌</h1>', icon: '', desc: '' },
+                    { id: 'team', label: '<h1>福建歌</h1>', icon: '', desc: '' },
                 ]
             };
 
@@ -228,7 +221,7 @@
             document.getElementById('pathDisplay').textContent = displayName;
 
             // 更新页面标题
-            document.getElementById('pageTitle').textContent = `📂 ${displayName}`;
+            document.getElementById('pageTitle').textContent = ` ${displayName}`;
 
             const children = childrenConfig[nodeId] || [];
             const gridContainer = document.getElementById('buttonGrid');

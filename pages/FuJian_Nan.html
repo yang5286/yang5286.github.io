@@ -440,7 +440,7 @@
 <body>
 
     <!-- ===== 页面头部 ===== -->
-    <h1>华语男歌手 · 歌单</h1>
+    <h1>福建男歌手 · 歌单</h1>
     <div class="meta">请将喜欢的歌曲编号写在订购单里</div>
 
     <!-- ===== 歌名列表容器 ===== -->
@@ -454,8 +454,8 @@
     </div>
 
     <!-- ===== 返回按钮 ===== -->
-    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'project'},'*'); return false;">
-        ← 返回项目
+    <button class="back-link" onclick="if(window.parent) window.parent.postMessage({type:'NAVIGATE_TO',nodeId:'root'},'*'); return false;">
+        ← 返回
     </button>
 
     <!-- ===== 弹窗（用于显示 iframe，但会优雅降级） ===== -->
@@ -492,39 +492,20 @@
             // ============================================================
             const songs = [
                 // ---- 一字部 ----
-                { title: '0001 下辈子还爱你', youtubeId: 'WZy2cn42yME' },
-                { title: '0002 下辈子再陪你永恒', youtubeId: 'zfpoBhrBu_o' },
-                { title: 'L', youtubeId: 'VY1l2-hmXpE' },
-                { title: 'O', youtubeId: '9bZkp7q19f0' },
-
-                // ---- 二字部 ----
-                { title: 'Happy', youtubeId: 'ZbZSe6N_BXs' },
-                { title: 'Demons', youtubeId: 'mWRsgZuwf_8' },
-                { title: 'Ride', youtubeId: 'Pw-0pbY9JeU' },
-                { title: 'Closer', youtubeId: 'PT2_F-1esPk' },
-                { title: 'Heathens', youtubeId: 'UprcpdwuwCg' },
-                { title: 'Believer', youtubeId: '7wtfhZwyrcc' },
-                { title: 'Radioactive', youtubeId: 'ktvTqknDobU' },
-
-                // ---- 三字部 ----
-                { title: 'Uptown Funk', youtubeId: 'OPf0YbXqDm0' },
-                { title: 'Shape of You', youtubeId: 'JGwWNGJdvx8' },
-                { title: 'See You Again', youtubeId: 'RgKAFK5djSk' },
-                { title: 'All of Me', youtubeId: '450p7goxZqg' },
-
-                // ---- 四字部 ----
-                { title: 'GANGNAM STYLE', youtubeId: '9bZkp7q19f0' },
-                { title: 'Despacito', youtubeId: 'kJQP7kiw5Fk' },
-                { title: 'Counting Stars', youtubeId: 'hT_nvWreIhg' },
-                { title: 'Stressed Out', youtubeId: 'pXRviuL6vMY' },
-
-                // ---- 五字部 ----
-                { title: 'Never Gonna Give You Up', youtubeId: 'dQw4w9WgXcQ' },
-                { title: 'Something Just Like This', youtubeId: 'FM7MFYoylVs' },
-                { title: 'Thinking Out Loud', youtubeId: 'lp-EO5I60KA' },
-
-                // ---- 六字部 ----
-                { title: 'YouTube Official Intro', youtubeId: 'VY1l2-hmXpE' }
+                { title: 'F053 一半心酸一半醉', youtubeId: 'dV2OkNuB-so' },
+                { title: 'F057 碼頭情歌', youtubeId: '3PwNtbzg4-0' },
+                { title: 'F058 感情債', youtubeId: '5Hsb0gfZMIg' },
+                { title: 'F059 相思寄月眉', youtubeId: 'zZVHOAQC1B0' },
+                { title: 'F060 醉寒夜', youtubeId: 'lHIBzEwOZpc' },
+                { title: 'F062 人生戲', youtubeId: 'dF1OwG72W6I' },
+                { title: 'F074 为谁心来碎', youtubeId: 'oB4DGovD13o' },
+                { title: 'F076 相思寄月眉', youtubeId: 'zZVHOAQC1B0' },
+                { title: 'F077 幸福的機會', youtubeId: '-n2xZGO_cy0' },
+                { title: 'F084 阿母', youtubeId: '6ZSG9b7qrgg' },
+                { title: 'F087 浪子歌聲', youtubeId: 'kqniqJpw9XA' },
+                { title: 'F089 相信', youtubeId: '6U3YWXP524g' },
+                { title: 'F091 迷戀你的香', youtubeId: '5-j3pzzoTxU' },
+                { title: 'F092 情淚', youtubeId: '-dBYe7-Lmxk' }
             ];
 
             // ============================================================
@@ -561,16 +542,16 @@
 
             // 字数后缀
             function getGroupSuffix(count) {
-                if (count === 5) return '一字部';
-                if (count === 6) return '二字部';
-                if (count === 7) return '三字部';
-                if (count === 8) return '四字部';
-                if (count === 9) return '五字部';
-                if (count === 10) return '六字部';
-                if (count === 11) return '七字部';
-                if (count === 12) return '八字部';
-                if (count === 13) return '九字部';
-                if (count === 14) return '十字部';
+                if (count === 2) return '一字部';
+                if (count === 3) return '二字部';
+                if (count === 4) return '三字部';
+                if (count === 5) return '四字部';
+                if (count === 6) return '五字部';
+                if (count === 7) return '六字部';
+                if (count === 8) return '七字部';
+                if (count === 9) return '八字部';
+                if (count === 10) return '九字部';
+                if (count === 11) return '十字部';
                 return `${count}字部`;
             }
 
@@ -607,7 +588,7 @@
                 html += `
                     <div class="group-section">
                         <div class="group-header">
-                            <span class="group-name">${icon} ${suffix}</span>
+                            <span class="group-name">${suffix}</span>
                             <span class="group-badge">${groupSongs.length} 首</span>
                         </div>
                         <ul class="song-list">
