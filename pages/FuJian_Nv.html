@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>华语男歌手 · 歌单</title>
+    <title>福建女歌手 · 歌单</title>
     <style>
         * {
             margin: 0;
@@ -440,7 +440,7 @@
 <body>
 
     <!-- ===== 页面头部 ===== -->
-    <h1>华语男歌手 · 歌单</h1>
+    <h1>福建女歌手 · 歌单</h1>
     <div class="meta">请将喜欢的歌曲编号写在订购单里</div>
 
     <!-- ===== 歌名列表容器 ===== -->
@@ -547,7 +547,14 @@
                 { title: 'F064 探戈戀歌', youtubeId: 'AUFEiXIlhsg' },
                 { title: 'F071 你哪會這無情', youtubeId: 'zJxgjBtTgpM' },
                 { title: 'F072 難忘的記誌', youtubeId: '6J6UyVgzERg' },
-                { title: 'F073 愛毋著', youtubeId: '4LJCxWaOCQA' }
+                { title: 'F073 愛毋著', youtubeId: '4LJCxWaOCQA' },
+                { title: 'F093  不老歌', youtubeId: 'xbYlugD9WH0' },
+                { title: 'F094 为何你爱着别人', youtubeId: 'lXbRH1Sya14' },
+                { title: 'F095 五更鼓', youtubeId: 'ZNaSJlIePHw' },
+                { title: 'F096 失落的夢', youtubeId: '_P9WUlcc0Gw' },
+                { title: 'F097 心事谁人知', youtubeId: 'Ig1-iV60UW4' },
+                { title: 'F098 深深的愛', youtubeId: 'AZfjxuBbpZI' },
+                { title: 'F099 酒梦', youtubeId: 'Mf5459CQgOc' }
             ];
 
             // ============================================================
@@ -584,34 +591,17 @@
 
             // 字数后缀
             function getGroupSuffix(count) {
-                if (count === 5) return '一字部';
-                if (count === 6) return '二字部';
-                if (count === 7) return '三字部';
-                if (count === 8) return '四字部';
-                if (count === 9) return '五字部';
-                if (count === 10) return '六字部';
-                if (count === 11) return '七字部';
-                if (count === 12) return '八字部';
-                if (count === 13) return '九字部';
-                if (count === 14) return '十字部';
+                if (count === 2) return '一字部';
+                if (count === 3) return '二字部';
+                if (count === 4) return '三字部';
+                if (count === 5) return '四字部';
+                if (count === 6) return '五字部';
+                if (count === 7) return '六字部';
+                if (count === 8) return '七字部';
+                if (count === 9) return '八字部';
+                if (count === 10) return '九字部';
+                if (count === 11) return '十字部';
                 return `${count}字部`;
-            }
-
-            // 分组图标
-            function getGroupIcon(count) {
-                const icons = {
-                    1: '①',
-                    2: '②',
-                    3: '③',
-                    4: '④',
-                    5: '⑤',
-                    6: '⑥',
-                    7: '⑦',
-                    8: '⑧',
-                    9: '⑨',
-                    10: '⑩'
-                };
-                return icons[count] || '📝';
             }
 
             // ========== 渲染分组列表 ==========
@@ -630,7 +620,7 @@
                 html += `
                     <div class="group-section">
                         <div class="group-header">
-                            <span class="group-name">${icon} ${suffix}</span>
+                            <span class="group-name">${suffix}</span>
                             <span class="group-badge">${groupSongs.length} 首</span>
                         </div>
                         <ul class="song-list">

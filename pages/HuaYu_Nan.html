@@ -492,39 +492,8 @@
             // ============================================================
             const songs = [
                 // ---- 一字部 ----
-                { title: '0001 下辈子还爱你', youtubeId: 'WZy2cn42yME' },
-                { title: '0002 下辈子再陪你永恒', youtubeId: 'zfpoBhrBu_o' },
-                { title: 'L', youtubeId: 'VY1l2-hmXpE' },
-                { title: 'O', youtubeId: '9bZkp7q19f0' },
-
-                // ---- 二字部 ----
-                { title: 'Happy', youtubeId: 'ZbZSe6N_BXs' },
-                { title: 'Demons', youtubeId: 'mWRsgZuwf_8' },
-                { title: 'Ride', youtubeId: 'Pw-0pbY9JeU' },
-                { title: 'Closer', youtubeId: 'PT2_F-1esPk' },
-                { title: 'Heathens', youtubeId: 'UprcpdwuwCg' },
-                { title: 'Believer', youtubeId: '7wtfhZwyrcc' },
-                { title: 'Radioactive', youtubeId: 'ktvTqknDobU' },
-
-                // ---- 三字部 ----
-                { title: 'Uptown Funk', youtubeId: 'OPf0YbXqDm0' },
-                { title: 'Shape of You', youtubeId: 'JGwWNGJdvx8' },
-                { title: 'See You Again', youtubeId: 'RgKAFK5djSk' },
-                { title: 'All of Me', youtubeId: '450p7goxZqg' },
-
-                // ---- 四字部 ----
-                { title: 'GANGNAM STYLE', youtubeId: '9bZkp7q19f0' },
-                { title: 'Despacito', youtubeId: 'kJQP7kiw5Fk' },
-                { title: 'Counting Stars', youtubeId: 'hT_nvWreIhg' },
-                { title: 'Stressed Out', youtubeId: 'pXRviuL6vMY' },
-
-                // ---- 五字部 ----
-                { title: 'Never Gonna Give You Up', youtubeId: 'dQw4w9WgXcQ' },
-                { title: 'Something Just Like This', youtubeId: 'FM7MFYoylVs' },
-                { title: 'Thinking Out Loud', youtubeId: 'lp-EO5I60KA' },
-
-                // ---- 六字部 ----
-                { title: 'YouTube Official Intro', youtubeId: 'VY1l2-hmXpE' }
+                { title: 'H122 思念成沙', youtubeId: 'CsoSEyBTj4Q' },
+                { title: '', youtubeId: '' }
             ];
 
             // ============================================================
@@ -561,34 +530,17 @@
 
             // 字数后缀
             function getGroupSuffix(count) {
-                if (count === 5) return '一字部';
-                if (count === 6) return '二字部';
-                if (count === 7) return '三字部';
-                if (count === 8) return '四字部';
-                if (count === 9) return '五字部';
-                if (count === 10) return '六字部';
-                if (count === 11) return '七字部';
-                if (count === 12) return '八字部';
-                if (count === 13) return '九字部';
-                if (count === 14) return '十字部';
+                if (count === 2) return '一字部';
+                if (count === 3) return '二字部';
+                if (count === 4) return '三字部';
+                if (count === 5) return '四字部';
+                if (count === 6) return '五字部';
+                if (count === 7) return '六字部';
+                if (count === 8) return '七字部';
+                if (count === 9) return '八字部';
+                if (count === 10) return '九字部';
+                if (count === 11) return '十字部';
                 return `${count}字部`;
-            }
-
-            // 分组图标
-            function getGroupIcon(count) {
-                const icons = {
-                    1: '①',
-                    2: '②',
-                    3: '③',
-                    4: '④',
-                    5: '⑤',
-                    6: '⑥',
-                    7: '⑦',
-                    8: '⑧',
-                    9: '⑨',
-                    10: '⑩'
-                };
-                return icons[count] || '📝';
             }
 
             // ========== 渲染分组列表 ==========
@@ -607,7 +559,7 @@
                 html += `
                     <div class="group-section">
                         <div class="group-header">
-                            <span class="group-name">${icon} ${suffix}</span>
+                            <span class="group-name">${suffix}</span>
                             <span class="group-badge">${groupSongs.length} 首</span>
                         </div>
                         <ul class="song-list">

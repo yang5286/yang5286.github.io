@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>华语男歌手 · 歌单</title>
+    <title>华语男女对唱 · 歌单</title>
     <style>
         * {
             margin: 0;
@@ -440,7 +440,7 @@
 <body>
 
     <!-- ===== 页面头部 ===== -->
-    <h1>华语男歌手 · 歌单</h1>
+    <h1>华语男女对唱 · 歌单</h1>
     <div class="meta">请将喜欢的歌曲编号写在订购单里</div>
 
     <!-- ===== 歌名列表容器 ===== -->
@@ -561,34 +561,17 @@
 
             // 字数后缀
             function getGroupSuffix(count) {
-                if (count === 5) return '一字部';
-                if (count === 6) return '二字部';
-                if (count === 7) return '三字部';
-                if (count === 8) return '四字部';
-                if (count === 9) return '五字部';
-                if (count === 10) return '六字部';
-                if (count === 11) return '七字部';
-                if (count === 12) return '八字部';
-                if (count === 13) return '九字部';
-                if (count === 14) return '十字部';
+                if (count === 2) return '一字部';
+                if (count === 3) return '二字部';
+                if (count === 4) return '三字部';
+                if (count === 5) return '四字部';
+                if (count === 6) return '五字部';
+                if (count === 7) return '六字部';
+                if (count === 8) return '七字部';
+                if (count === 9) return '八字部';
+                if (count === 10) return '九字部';
+                if (count === 11) return '十字部';
                 return `${count}字部`;
-            }
-
-            // 分组图标
-            function getGroupIcon(count) {
-                const icons = {
-                    1: '①',
-                    2: '②',
-                    3: '③',
-                    4: '④',
-                    5: '⑤',
-                    6: '⑥',
-                    7: '⑦',
-                    8: '⑧',
-                    9: '⑨',
-                    10: '⑩'
-                };
-                return icons[count] || '📝';
             }
 
             // ========== 渲染分组列表 ==========
@@ -607,7 +590,7 @@
                 html += `
                     <div class="group-section">
                         <div class="group-header">
-                            <span class="group-name">${icon} ${suffix}</span>
+                            <span class="group-name">${suffix}</span>
                             <span class="group-badge">${groupSongs.length} 首</span>
                         </div>
                         <ul class="song-list">
